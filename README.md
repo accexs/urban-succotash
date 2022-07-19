@@ -1,0 +1,1 @@
+Run user seed to create user: ```docker-compose exec me_wallet_service go run setup/seed.go```

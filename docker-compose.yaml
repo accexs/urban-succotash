@@ -1,0 +1,20 @@
+version: "3.8"
+services:
+  me_wallet_service:
+    container_name: me_wallet_service
+    build:
+      context: .
+      target: dev
+    volumes:
+      - .:/app
+    ports:
+      - "8080:8080"
+  me_wallet_db:
+    build:
+      context: setup
+      dockerfile: Dockerfile
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
