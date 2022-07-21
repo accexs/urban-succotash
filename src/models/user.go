@@ -6,10 +6,9 @@ import (
 )
 
 type User struct {
-	gorm.Model
-	Username string `json:"username" gorm:"unique;notNull"`
+	BaseModel
 	Email    string `json:"email" gorm:"unique;notNull"`
-	Password string `json:"password;notNull"`
+	Password string `json:"password" gorm:"notNull"`
 	Balance  []Balance
 }
 

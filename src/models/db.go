@@ -3,6 +3,7 @@ package models
 import (
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"time"
 )
 
 var DB *gorm.DB
@@ -15,10 +16,17 @@ func ConnectDatabase() {
 		panic("Failed to connect to database!")
 	}
 
-	err = DB.AutoMigrate(&User{}, &Balance{})
+	err = db.AutoMigrate(&User{}, &Balance{})
 	if err != nil {
 		panic("Failed to run migrations")
 	}
 
 	DB = db
+}
+
+type BaseModel struct {
+	ID        uint           `json:"id" gorm:"primaryKey"`
+	CreatedAt time.Time      `json:"createdAt"`
+	UpdatedAt time.Time      `json:"updatedAt"`
+	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }

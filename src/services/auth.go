@@ -37,10 +37,9 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 
 func CreateToken(userId uint) (*models.TokenDetails, error) {
 	td := &models.TokenDetails{}
-	td.AtExpires = time.Now().Add(time.Minute * 15).Unix()
+	td.AtExpires = time.Now().Add(time.Minute * 45).Unix()
 	td.Id = userId
 	var err error
-	// os.Setenv("ACCESS_SECRET", "some-secret") //TODO: this should be in an env file
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
 	atClaims["user_id"] = userId

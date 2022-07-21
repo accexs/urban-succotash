@@ -2,7 +2,7 @@ package models
 
 type Login struct {
 	Password string `json:"password"`
-	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 type TokenDetails struct {

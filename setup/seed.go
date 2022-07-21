@@ -1,14 +1,23 @@
-package setup
+package main
 
 import (
 	"me-wallet/src/models"
 )
 
-func _() {
+func main() {
 	models.ConnectDatabase()
 
-	res := models.DB.Create(&models.User{Username: "admin", Email: "admin@mail.com", Password: "password"})
+	user := models.User{
+		Email:    "user@mail.com",
+		Password: "password",
+		Balance: []models.Balance{
+			{CurrentAmount: 0},
+		},
+	}
+
+	res := models.DB.Create(&user)
 	if res.Error != nil {
 		panic("Error seeding user")
 	}
+	println("Seeding completed")
 }

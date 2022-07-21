@@ -1,12 +1,8 @@
 package models
 
-import (
-	"gorm.io/gorm"
-)
-
 type Balance struct {
-	gorm.Model
-	CurrencyType string `json:"currency" gorm:"notNull"`
-	UserID       uint   `json:"user_id" gorm:"notNull"`
-	User         User
+	BaseModel
+	CurrentAmount float32 `json:"currentAmount" gorm:"notNull"`
+	UserID        uint    `json:"userID" gorm:"notNull"`
+	User          User    `json:"-"`
 }
