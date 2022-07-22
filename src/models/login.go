@@ -6,7 +6,7 @@ type Login struct {
 }
 
 type TokenDetails struct {
-	Id        uint   `json:"id"`
+	ID        uint   `json:"id"`
 	Token     string `json:"token"`
 	AtExpires int64  `json:"atExpires"`
 }

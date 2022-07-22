@@ -2,11 +2,11 @@ package main
 
 import (
 	"log"
-	"me-wallet/src/helpers"
+	"me-wallet/src/utils"
 )
 
 func main() {
-	err := helpers.CreateServer().Run()
+	err := utils.CreateServer().Run()
 	if err != nil {
 		log.Panicln(err)
 	}

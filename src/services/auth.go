@@ -38,7 +38,7 @@ func VerifyToken(r *http.Request) (*jwt.Token, error) {
 func CreateToken(userId uint) (*models.TokenDetails, error) {
 	td := &models.TokenDetails{}
 	td.AtExpires = time.Now().Add(time.Minute * 45).Unix()
-	td.Id = userId
+	td.ID = userId
 	var err error
 	atClaims := jwt.MapClaims{}
 	atClaims["authorized"] = true
