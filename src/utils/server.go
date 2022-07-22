@@ -3,6 +3,7 @@ package utils
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"io"
 	"me-wallet/src/handlers"
 	"me-wallet/src/middlewares"
 	"me-wallet/src/models"
@@ -17,6 +18,9 @@ func CreateServer() *gin.Engine {
 			panic("Error loading .env file")
 		}
 	}
+
+	f, _ := os.Create("./storage/app.log")
+	gin.DefaultErrorWriter = io.MultiWriter(f, os.Stdout)
 
 	r := gin.Default()
 

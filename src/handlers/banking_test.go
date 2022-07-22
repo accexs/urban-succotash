@@ -16,6 +16,45 @@ import (
 	"testing"
 )
 
+func TestTransferMoneyIntegration(t *testing.T) {
+	models.ConnectTestDatabase()
+	expectedFromUser := test_utils.UserFactory()
+	models.DB.Create(&expectedFromUser)
+	expectedFromUserBalance := test_utils.BalanceFactory(*expectedFromUser, 100.5)
+	models.DB.Create(&expectedFromUserBalance)
+	expectedToUser := test_utils.UserFactory()
+	models.DB.Create(&expectedToUser)
+	expectedToUserBalance := test_utils.BalanceFactory(*expectedToUser, 100)
+	models.DB.Create(&expectedToUserBalance)
+
+	body := handlers.TransferRequest{
+		ToUserID:  expectedToUser.ID,
+		Amount:    50.5,
+		Reference: "An integration test transfer",
+	}
+	jsonBody, _ := json.Marshal(body)
+	request, _ := http.NewRequest(http.MethodPut, "/banking/send", bytes.NewBuffer(jsonBody))
+	response := httptest.NewRecorder()
+	c, _ := test_utils.CreateTestServer(request, response)
+
+	test_utils.MockUserContext(*expectedFromUser, c)
+
+	handlers.TransferMoney(c)
+
+	var actualToUserBalance, actualFromUserBalance models.Balance
+	models.DB.First(&actualToUserBalance, expectedToUserBalance.ID)
+	models.DB.First(&actualFromUserBalance, expectedFromUserBalance.ID)
+
+	var transaction models.Transaction
+	_ = json.Unmarshal(response.Body.Bytes(), &transaction)
+	assert.Equal(t, http.StatusCreated, response.Code)
+	assert.EqualValues(t, 50.5, transaction.Amount)
+	assert.Equal(t, expectedToUser.ID, transaction.ToUserID)
+	assert.Equal(t, expectedFromUser.ID, transaction.FromUserID)
+	assert.EqualValues(t, 150.5, actualToUserBalance.CurrentAmount)
+	assert.EqualValues(t, 50, actualFromUserBalance.CurrentAmount)
+}
+
 func TestGetBalance(t *testing.T) {
 	repositories.BalanceRepository = &mocks.BalanceRepoMock{}
 

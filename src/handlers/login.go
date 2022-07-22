@@ -16,12 +16,12 @@ func Login(c *gin.Context) {
 
 	var user models.User
 	if err := models.DB.Where("email = ?", credentials.Email).First(&user).Error; err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "No user registered"})
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please provide valid login details"})
 		return
 	}
 
 	if err := services.CheckPassword(credentials.Password, user.Password); err != nil {
-		c.JSON(http.StatusUnauthorized, "Please provide valid login details")
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Please provide valid login details"})
 		return
 	}
 

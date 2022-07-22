@@ -2,6 +2,7 @@ package models
 
 import (
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"time"
 )
@@ -16,12 +17,28 @@ func ConnectDatabase() {
 		panic("Failed to connect to database!")
 	}
 
-	err = db.AutoMigrate(&User{}, &Balance{}, &Transaction{})
+	migrate(db)
+
+	DB = db
+}
+
+func ConnectTestDatabase() {
+	db, err := gorm.Open(sqlite.Open("file::memory:?cache=shared"), &gorm.Config{})
+
+	if err != nil {
+		panic(err)
+	}
+
+	migrate(db)
+
+	DB = db
+}
+
+func migrate(db *gorm.DB) {
+	err := db.AutoMigrate(&User{}, &Balance{}, &Transaction{})
 	if err != nil {
 		panic("Failed to run migrations")
 	}
-
-	DB = db
 }
 
 type BaseModel struct {
