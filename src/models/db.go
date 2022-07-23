@@ -42,8 +42,8 @@ func migrate(db *gorm.DB) {
 }
 
 type BaseModel struct {
-	ID        uint           `json:"id" gorm:"primaryKey"`
-	CreatedAt time.Time      `json:"createdAt"`
-	UpdatedAt time.Time      `json:"updatedAt"`
+	ID        uint           `json:"id" gorm:"primaryKey" example:"123"`
+	CreatedAt time.Time      `json:"createdAt" example:"2022-07-22T13:07:41.24104Z"`
+	UpdatedAt time.Time      `json:"updatedAt" example:"2022-07-22T13:07:41.24104Z"`
 	DeletedAt gorm.DeletedAt `json:"deletedAt" gorm:"index"`
 }

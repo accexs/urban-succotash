@@ -6,30 +6,18 @@ import (
 
 type Transaction struct {
 	BaseModel
-	Amount     float32 `json:"amount" gorm:"notNull"`
-	Reference  string  `json:"reference"`
+	Amount     float32 `json:"amount" gorm:"notNull" example:"250"`
+	Reference  string  `json:"reference" example:"Transfer reference message"`
 	FromUser   User    `json:"-"`
-	FromUserID uint    `json:"fromUserID" gorm:"notNull"`
+	FromUserID uint    `json:"fromUserID" gorm:"notNull" example:"123"`
 	ToUser     User    `json:"-"`
-	ToUserID   uint    `json:"toUserID" gorm:"notNull"`
+	ToUserID   uint    `json:"toUserID" gorm:"notNull" example:"458"`
 }
 
 func (t *Transaction) BeforeCreate(tx *gorm.DB) error {
-	// get user balance for FromUserID
-	// check if (balance - amount) < 0
-	// 	true -> return error
 	return nil
 }
 
 func (t *Transaction) AfterCreate(tx *gorm.DB) error {
-	//var balanceRepo = repositories.BalanceRepository
-	//_, err := balanceRepo.UpdateCurrentAmount(t.ToUser, t.Amount)
-	//if err != nil {
-	//	return err
-	//}
-	//_, err = balanceRepo.UpdateCurrentAmount(t.FromUser, -t.Amount)
-	//if err != nil {
-	//	return err
-	//}
 	return nil
 }

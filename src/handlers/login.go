@@ -7,6 +7,17 @@ import (
 	"net/http"
 )
 
+// Login godoc
+// @Summary Get access token.
+// @Description Verifies credentials and returns access token.
+// @Tags auth
+// @Accept json
+// @Produce json
+// @Param Payload body models.Login true "Login"
+// @Success 200 {object} models.TokenDetails
+// @Failure 400 {object} object
+// @Failure 422 {object} object
+// @Router /login [post]
 func Login(c *gin.Context) {
 	var credentials models.Login
 	if err := c.ShouldBindJSON(&credentials); err != nil {

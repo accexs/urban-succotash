@@ -1,0 +1,256 @@
+basePath: /
+definitions:
+  gorm.DeletedAt:
+    properties:
+      time:
+        type: string
+      valid:
+        description: Valid is true if Time is not NULL
+        type: boolean
+    type: object
+  handlers.TransferRequest:
+    properties:
+      amount:
+        example: 50
+        type: number
+      reference:
+        example: Transfer message example
+        type: string
+      toUserID:
+        example: 123
+        type: integer
+    required:
+    - amount
+    - toUserID
+    type: object
+  models.Balance:
+    properties:
+      createdAt:
+        example: "2022-07-22T13:07:41.24104Z"
+        type: string
+      currentAmount:
+        type: number
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      id:
+        example: 123
+        type: integer
+      updatedAt:
+        example: "2022-07-22T13:07:41.24104Z"
+        type: string
+      userID:
+        type: integer
+    type: object
+  models.Health:
+    properties:
+      environment:
+        example: dev
+        type: string
+      status:
+        example: ok
+        type: string
+    type: object
+  models.Login:
+    properties:
+      email:
+        example: user1@mail.com
+        type: string
+      password:
+        example: password
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  models.TokenDetails:
+    properties:
+      atExpires:
+        example: 1658548537
+        type: integer
+      id:
+        example: 123
+        type: integer
+      token:
+        example: auth-jwt-token
+        type: string
+    type: object
+  models.Transaction:
+    properties:
+      amount:
+        example: 250
+        type: number
+      createdAt:
+        example: "2022-07-22T13:07:41.24104Z"
+        type: string
+      deletedAt:
+        $ref: '#/definitions/gorm.DeletedAt'
+      fromUserID:
+        example: 123
+        type: integer
+      id:
+        example: 123
+        type: integer
+      reference:
+        example: Transfer reference message
+        type: string
+      toUserID:
+        example: 458
+        type: integer
+      updatedAt:
+        example: "2022-07-22T13:07:41.24104Z"
+        type: string
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: API doc and playground for me chat.
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: Me wallet API
+  version: "1.0"
+paths:
+  /banking/balance:
+    get:
+      consumes:
+      - '*/*'
+      description: get the balance of logged-in user.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Balance'
+      security:
+      - ApiKeyAuth: []
+      summary: User balance.
+      tags:
+      - banking
+  /banking/send:
+    put:
+      consumes:
+      - application/json
+      description: Transfer an amount of money from logged-in user to a target user.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      - description: Transfer
+        in: body
+        name: Payload
+        required: true
+        schema:
+          $ref: '#/definitions/handlers.TransferRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+      security:
+      - ApiKeyAuth: []
+      summary: Make a transfer.
+      tags:
+      - banking
+  /banking/transactions:
+    get:
+      consumes:
+      - '*/*'
+      description: get transactions of logged-in user.
+      parameters:
+      - default: Bearer <Add access token here>
+        description: Insert your access token
+        in: header
+        name: Authorization
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Transaction'
+            type: array
+      security:
+      - ApiKeyAuth: []
+      summary: User transactions.
+      tags:
+      - banking
+  /health:
+    get:
+      consumes:
+      - '*/*'
+      description: get the status of server.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Health'
+      summary: Show the status of server.
+      tags:
+      - health
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Verifies credentials and returns access token.
+      parameters:
+      - description: Login
+        in: body
+        name: Payload
+        required: true
+        schema:
+          $ref: '#/definitions/models.Login'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.TokenDetails'
+        "400":
+          description: Bad Request
+          schema:
+            type: object
+        "422":
+          description: Unprocessable Entity
+          schema:
+            type: object
+      summary: Get access token.
+      tags:
+      - auth
+schemes:
+- http
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

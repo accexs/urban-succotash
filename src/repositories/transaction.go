@@ -28,6 +28,6 @@ func (t transactionRepo) Store(toUser models.User, fromUser models.User, amount 
 
 func (t transactionRepo) GetForUser(user models.User) ([]*models.Transaction, error) {
 	var transactions []*models.Transaction
-	err := models.DB.Where("user_id = ?", user.ID).Find(transactions).Error
+	err := models.DB.Where("from_user_id = ?", user.ID).Or("to_user_id = ?", user.ID).Find(&transactions).Error
 	return transactions, err
 }
