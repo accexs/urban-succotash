@@ -13,10 +13,11 @@ Build and server with air (hot reload) should be ready to use with docker-compos
 Godotenv package is installed, and for security reasons a `ACCESS_SECRET` could be used. DB credentials are set by
 default on server creation to work with docker however the `.env` file could be used to provide something more specific.
 
-Running `docker-compose up` should be enough to have everything setup
+Running `docker-compose up` should be enough to have everything setup.
 
 On `/swagger/index.html` is the API documentation and playground, everything should be usable but consider the 
-target user id for the transfer
+target user id for the transfer. The API needs an access token that is provided by the login method, on the swagger ui, 
+just execute the example after running the seed.
 
 Run seed to create test users: `docker-compose exec me_wallet_service go run setup/seed.go`
 
